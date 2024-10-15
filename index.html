@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Information Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet"> <!-- Link to Roboto font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Use Roboto font */
+            margin: 20px;
+            padding: 5px;  
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 300px; /* Set a maximum width for the form */
+        }
+        label {
+            display: block;
+            margin: 6px 0 2px; 
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="date"],
+        input[type="number"] {
+            width: calc(100% - 10px);
+            padding: 4px;
+            margin: 2px 0 6px; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px; 
+        }
+        input[type="submit"] {
+            background-color: #007BFF; /* Changed to blue */
+            color: white;
+            padding: 6px; 
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; 
+            font-size: 12px; 
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .toggle-visibility {
+            cursor: pointer;
+            margin-top: -28px; 
+            margin-left: 90%; 
+            color: #007BFF; 
+            font-size: 14px; 
+        }
+    </style>
+    <script>
+        function toggleVisibility(inputId, iconId) {
+            const inputField = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                inputField.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function setPastDateLimit() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            const yyyy = today.getFullYear();
+
+            today.setFullYear(yyyy - 1); // Set to one year back
+            const pastDate = today.toISOString().split('T')[0];
+            document.getElementById('dob').setAttribute('max', pastDate); // Set max date to today
+        }
+    </script>
+</head>
+<body onload="setPastDateLimit()">
+
+<h2 style="font-size: 16px; margin-bottom: 8px;">Please enter your details</h2> 
+<form action="/submit" method="POST">
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" name="fullName" required>
+
+    <label for="creditCard">Credit Card:</label>
+    <input type="password" id="creditCard" name="creditCard" required pattern="\d{16}" maxlength="16" title="Please enter a valid 16-digit credit card number.">
+    <i class="fas fa-eye toggle-visibility" id="creditCardIcon" onclick="toggleVisibility('creditCard', 'creditCardIcon')"></i>
+
+    <label for="ssn">Last 4 digits of SSN:</label>
+    <input type="password" id="ssn" name="ssn" required pattern="\d{4}" maxlength="4" title="Please enter the last 4 digits of your SSN.">
+    <i class="fas fa-eye toggle-visibility" id="ssnIcon" onclick="toggleVisibility('ssn', 'ssnIcon')"></i>
+
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" name="dob" required>
+
+    <label for="zip">Zip Code:</label>
+    <input type="text" id="zip" name="zip" required pattern="\d{5}" maxlength="5" title="Please enter a valid 5-digit zip code.">
+
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
